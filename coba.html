@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Undangan Pernikahan</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #E1D4BB;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .banner {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(./gambar2.jpg);
+            background-size: cover;
+            background-position: center;
+            color: #eaeaea;
+            text-align: center;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .banner h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #A4907C;
+            border-color: #A4907C;
+        }
+
+        .btn-primary:hover {
+            background-color: #8D7B68;
+            border-color: #8D7B68;
+        }
+
+        .sender-info {
+            margin-top: 40px;
+        }
+
+        .sender-info h3 {
+            margin-bottom: 10px;
+        }
+
+        .sender-info p {
+            margin-bottom: 5px;
+        }
+
+        .sender-message {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="banner">
+            <h1>Special Invitation</h1>
+            <p>Tanpa Mengurangi Rasa Hormat Apapun, Kami Mengundang Anda Kepernikahan Kami</p>
+        </div>
+
+        <form id="greetingForm">
+            <h2>Kartu Ucapan</h2>
+            <div class="form-group">
+                <label for="name">Nama Anda:</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Kata Ucapan:</label>
+                <textarea class="form-control" id="message" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="attendance">Keterangan Hadir:</label>
+                <select class="form-control" id="attendance" required>
+                    <option value="Hadir">Hadir</option>
+                    <option value="Tidak Hadir">Tidak Hadir</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Kirim Kartu Ucapan</button>
+        </form>
+
+        <div id="senderInfo" class="sender-info"></div>
+    </div>
+
+    <script>
+        // Array untuk menyimpan data pengirim
+        var senders = [];
+
+        document.getElementById("greetingForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            var name = document.getElementById("name").value;
+            var message = document.getElementById("message").value;
+            var attendance = document.getElementById("attendance").value;
+
+            var sender = {
+                name: name,
+                message: message,
+                attendance: attendance
+            };
+
+            senders.unshift(sender);
+
+            saveSenderInfo();
+
+            displaySenderInfo();
+
+            document.getElementById("name").value = "";
+            document.getElementById("message").value = "";
+            document.getElementById("attendance").value = "Hadir";
+        });
+
+        function saveSenderInfo() {
+            localStorage.setItem("senders", JSON.stringify(senders));
+        }
+
+        function displaySenderInfo() {
+            var senderInfoElement = document.getElementById("senderInfo");
+            senderInfoElement.innerHTML = "";
+
+            if (senders.length > 0) {
+                senders.forEach(function (sender) {
+                    var senderMessageElement = document.createElement("div");
+                    senderMessageElement.classList.add("sender-message");
+                    senderMessageElement.innerHTML = "<h3>Pengirim Kartu Ucapan:</h3>" +
+                        "<p><strong>Nama:</strong> " + sender.name + "</p>" +
+                        "<p><strong>Kata Ucapan:</strong></p>" +
+                        "<p>" + sender.message.replace(/\n/g, "<br>") + "</p>" +
+                        "<p><strong>Keterangan Hadir:</strong> " + sender.attendance + "</p>";
+
+                    senderInfoElement.appendChild(senderMessageElement);
+                });
+            }
+
+            senderInfoElement.style.display = "block";
+        }
+
+        function loadSenderInfo() {
+            var storedSenders = localStorage.getItem("senders");
+
+            if (storedSenders) {
+                senders = JSON.parse(storedSenders);
+                displaySenderInfo();
+            }
+        }
+
+        // Memanggil fungsi untuk menampilkan data pengirim saat halaman dimuat
+        loadSenderInfo();
+    </script>
+</body>
+
+</html>
